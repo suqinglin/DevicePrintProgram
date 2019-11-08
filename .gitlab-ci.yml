@@ -1,0 +1,14 @@
+stages:
+- build
+
+variables:
+  APP: DevicePrintProgram
+
+build:maven:
+  stage: build
+  image: registry.baota.io/wallbase/maven:3.5.4-jdk-8-alpine-docker
+  before_script:
+  - mkdir -p /root/.m2
+  - wget https://storage.baota.io/settings.xml && mv settings.xml /root/.m2/
+  script:
+  - mvn package -DskipTests -U -e -B
