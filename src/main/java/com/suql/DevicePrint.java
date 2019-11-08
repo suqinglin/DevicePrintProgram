@@ -23,6 +23,7 @@ public class DevicePrint implements ActionListener {
     private JTextField tfModel;
     private JTextField tfCount;
     private JLabel lbResult;
+    private JLabel lbInfo;
     private PrintServiceImpl printService;
 
     public static void main(String[] args) {
@@ -60,6 +61,13 @@ public class DevicePrint implements ActionListener {
         jpCount.add(tfCount);
         jpCount.setBorder(BorderFactory.createTitledBorder("Count"));
         frame.add(jpCount);
+
+        // 增加api地址说明
+        JPanel jpInfoPanel = new JPanel(new FlowLayout());
+        lbInfo = new JLabel("api接口地址:" + Constant.API_PRINT_DATA);
+        jpInfoPanel.add(lbInfo);
+        jpInfoPanel.setBorder(BorderFactory.createTitledBorder("Info"));
+        frame.add(jpInfoPanel);
 
 
         JPanel jpButton = new JPanel(new GridLayout(1, 3));
