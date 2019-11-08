@@ -12,4 +12,4 @@ build:maven:
   - wget https://storage.baota.io/settings.xml && mv settings.xml /root/.m2/
   - apk add ia32-libs
   script:
-  - mvn package -DskipTests -U -e -B
+  - mvn compile -DskipTests -U -e -B
