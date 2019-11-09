@@ -51,7 +51,10 @@ public class Constant {
 
     //please replace the IP and Port of the IoT platform environment address, when you use the demo.
 //    public static final String BASE_URL = "http://183.66.233.86:8089";
-    public static final String BASE_URL = "http://120.92.114.123:8089";
+    // public static final String BASE_URL = "http://120.92.114.123:8089";
+
+    // 测试环境
+    public static final String BASE_URL = "https://factory.baota.io";
 
     //*************************** The following constants do not need to be modified *********************************//
 
