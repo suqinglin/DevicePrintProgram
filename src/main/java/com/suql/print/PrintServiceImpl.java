@@ -14,9 +14,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 public class PrintServiceImpl implements com.suql.print.PrintService {
 
-    public String createQrCodeByMac(String remark, String mac, String sn, String model, String name) {
+    public String createQrCodeByMac(String remark, String mac, String sn, String model, String name, int template) {
         // 初始化方法必须调用
-        Constant.getInstance().init("GWF_".equals(remark));
+        Constant.getInstance().init(template);
         String msg = String.valueOf(System.currentTimeMillis()) + ".png";
 
         CodeModel info = new CodeModel();
@@ -78,7 +78,7 @@ public class PrintServiceImpl implements com.suql.print.PrintService {
 //        info.setProductSn("1234567890");
 //        String path = printService.createQrCodeByMac("GWF_", "FFFFDC2C28DBABAB", "1234567891", "NL-GWF01A", "Lora网关路由器");
 //        for (int i = 0; i < 50 ; i++) {
-            String path = printService.createQrCodeByMac("FRM_", "FFFFDC2C280003B5", "0000000945", "NL-FLL19B", "Smart Face Lock M2");
+            String path = printService.createQrCodeByMac("FRM_", "FFFFDC2C280003B5", "0000000945", "NL-FLL19B", "LED Dimmer Power", 1);
             printService.print(path);
 //        }
     }

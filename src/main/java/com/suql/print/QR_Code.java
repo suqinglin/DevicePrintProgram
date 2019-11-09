@@ -8,6 +8,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.suql.utils.Constant;
 
 import javax.imageio.ImageIO;
+import javax.print.attribute.standard.MediaSizeName;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -99,6 +100,39 @@ public class QR_Code {
         return img;
     }
 
+    /**
+     * 生成条形码
+     *
+     */
+    public static BufferedImage getBarCode(CodeModel info) {
+        BufferedImage img = null;
+        try {
+            int width = 105;
+            int height = 60;
+            HashMap<EncodeHintType, String> hints = new HashMap<EncodeHintType, String>();
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            // 条形码的格式是 BarcodeFormat.EAN_13
+            BitMatrix bm = new MultiFormatWriter().encode(info.getProductModel() + info.getProductSn(), BarcodeFormat.CODE_128, width, height, hints);
+//            BitMatrix bm = new MultiFormatWriter().encode("0001234567890", BarcodeFormat.EAN_13, width, height, hints);
+            int[] locationTopLeft = bm.getTopLeftOnBit();
+            int[] locationBottomRight = bm.getBottomRightOnBit();
+            info.setBottomStart(new int[] { locationTopLeft[0], locationBottomRight[1] });
+            info.setBottomEnd(locationBottomRight);
+            int w = bm.getWidth();
+            int h = bm.getHeight();
+            img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    img.setRGB(x, y, bm.get(x, y) ? BLACK : WHITE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return img;
+    }
+
+
 
     /**
      * 2.为二维码增加logo和二维码下文字 logo--可以为null 文字--可以为null或者空字符串""
@@ -152,16 +186,20 @@ public class QR_Code {
             g1.drawString("SN:" + info.getProductSn(), width, fontHeight * 3 + 22);
             g1.drawString("MAC:" + info.getProductMac(), width, fontHeight * 4 + 33);
             g1.drawString("Nexless Co.,Ltd.", width, fontHeight * 5 + 44);
+            if (Constant.IS_PRINT_DOUBLE) {
+                g1.drawString("SN:" + info.getProductSn(), 680, fontHeight * 5 + 50);
+                Image divider = ImageIO.read(getClass().getClassLoader().getResourceAsStream("image/cut_divider.png"));
+
+                g1.drawImage(divider,  620, 0, null);
+                g1.drawImage(bm, 685, 0, 225, 225, null);
+//                g1.drawImage(bm, 520, 0, null);
+            }
+//            g1.drawString(info.getProductModel(), width, fontHeight * 2 + 11);
+//            g1.drawString("SN:" + info.getProductSn(), width, fontHeight * 3 + 22);
+//            g1.drawString(info.getProductMac(), width, fontHeight * 4 + 33);
+//            g1.drawString("Nexless Co.,Ltd.", width, fontHeight * 5 + 44);
         }
 
-//        URL url = getClass().getClassLoader().getResource("/resources/image/ccc.png");
-//        g1.drawString("型号:NL-GWF01A", width, fontHeight * 2 + 21);
-//        g1.drawString("序号:1234567890", width + 310, fontHeight * 2 + 21);
-//        g1.drawString("地址:DC2C26123456", width, fontHeight * 3 + 30);
-//        g1.drawString("热点:NEXLESS_3456", width + 310, fontHeight * 3 + 30);
-//        g1.drawString("设置:nexlesswifi.com", width, fontHeight * 4 + 36);
-//        g1.drawString("密码:12345678", width + 310, fontHeight * 4 + 36);
-//        g1.drawString("厂商:重庆星翼智慧科技有限公司", width, fontHeight * 5 + 48);
         g1.dispose();
         bm = bm1;
 
@@ -232,4 +270,57 @@ public class QR_Code {
         return result;
     }
 
+
+//    public static void main(String args[]) {
+//
+//        String filePath = Constant.QR_FILE_PATH + "1234567.png";
+//        File file = new File(filePath);
+//        File parent = file.getParentFile();
+//        if (!parent.exists())
+//            parent.mkdirs();
+//        OutputStream output = null;
+//        try {
+//            output = new BufferedOutputStream(new FileOutputStream(file));
+////            dealDesc(info, output);
+//            try {
+//                CodeModel model = new CodeModel();
+//                model.setProductModel("LDP01A");
+//                model.setProductSn("0000000002");
+//                BufferedImage bm = getBarCode(model);
+//                int width = bm.getWidth();
+//                int height = bm.getHeight();
+//                BufferedImage bm1 = new BufferedImage(width, height + 35,
+//                        BufferedImage.TYPE_INT_RGB);
+//                Font font = new Font("微软雅黑", Font.PLAIN, 20);
+//                Graphics g1 = bm1.getGraphics();
+////                g1.setColor(Color.RED);
+//                g1.fillRect(0, 0, width, height + 40);
+//                g1.drawImage(bm, 0, 5, null);
+//                g1.setFont(font);
+//                g1.setColor(Color.BLACK);
+//                g1.drawString("SN:0000000002", 10, height + 28);
+//                g1.dispose();
+//                bm = bm1;
+//                ImageIO.write(bm, "png", output);
+//                Constant.getInstance().init(2);
+//
+//                Constant.PRINT_WIDTH = 29;
+//                Constant.PRINT_HEIGHT = 19;
+//                Constant.PRINT_MEDIA_SIZE = MediaSizeName.ISO_A9;
+//
+//                new PrintServiceImpl().print(filePath);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            output.flush();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                output.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
