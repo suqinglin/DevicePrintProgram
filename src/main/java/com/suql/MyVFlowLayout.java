@@ -46,32 +46,32 @@ public class MyVFlowLayout extends FlowLayout
     boolean hfill;
     boolean vfill;
 
-    public static void main(String[] args)
-    {
-        System.out.println("Just for test ...");
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setBounds(0, 0, 600, 600);
-        frame.setLayout(new MyVFlowLayout());
-
-        int i = 0;
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        frame.add(new JButton(String.valueOf(i++)));
-        JButton button = new JButton("spec");
-        button.setPreferredSize(new Dimension(100, 50));
-        frame.add(button);
-        frame.add(new JButton(String.valueOf(i++)));
-
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args)
+//    {
+//        System.out.println("Just for test ...");
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setBounds(0, 0, 600, 600);
+//        frame.setLayout(new MyVFlowLayout());
+//
+//        int i = 0;
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        frame.add(new JButton(String.valueOf(i++)));
+//        JButton button = new JButton("spec");
+//        button.setPreferredSize(new Dimension(100, 50));
+//        frame.add(button);
+//        frame.add(new JButton(String.valueOf(i++)));
+//
+//        frame.setVisible(true);
+//    }
 
     /**
      * Construct a new VerticalFlowLayout with a middle alignment, and the fill

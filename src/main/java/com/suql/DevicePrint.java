@@ -6,6 +6,7 @@ import com.suql.utils.HttpsUtil;
 import com.suql.utils.JsonUtil;
 import org.apache.http.HttpResponse;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,8 @@ public class DevicePrint implements ActionListener {
     private JTextField tfCount;
     private JLabel lbResult;
     private PrintServiceImpl printService;
+    private JRadioButton jrb1,jrb2,jrb3;
+    private int temp = 0;
 
     public static void main(String[] args) {
         new DevicePrint();
@@ -32,8 +35,34 @@ public class DevicePrint implements ActionListener {
     public DevicePrint() {
 
         JFrame frame = new JFrame();
+        try {
+            Image icon = ImageIO.read(getClass().getClassLoader().getResourceAsStream("image/printer.ico"));
+            frame.setIconImage(icon);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         frame.setTitle("Device Print");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // 模板
+        JPanel jpTemplete = new JPanel();
+        JLabel lbTemp = new JLabel("Template:         ");
+        jrb1 = new JRadioButton("500*250 一般设备");
+        jrb2 = new JRadioButton("770*270 一般设备");
+        jrb3 = new JRadioButton("770*270 网关");
+        jrb1.addActionListener(this);
+        jrb2.addActionListener(this);
+        jrb3.addActionListener(this);
+        ButtonGroup bgTemplate = new ButtonGroup();
+        bgTemplate.add(jrb1);
+        bgTemplate.add(jrb2);
+        bgTemplate.add(jrb3);
+        jpTemplete.add(lbTemp);
+        jpTemplete.add(jrb1);
+        jpTemplete.add(jrb2);
+        jpTemplete.add(jrb3);
+        frame.add(jpTemplete);
 
+        // 打印机校对
         JPanel jpPrinterProofreadButton = new JPanel(new GridLayout(1, 3));
         btnPrinterProofread = new JButton("打印机校对");
         btnPrinterProofread.addActionListener(this);
@@ -83,9 +112,25 @@ public class DevicePrint implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnStartPrint) {
             try {
+                if (temp == 0) {
+                    lbResult.setText("请选择Template！");
+                    return;
+                }
                 String model = tfModel.getText();
                 String count = tfCount.getText();
                 String name = tfName.getText();
+                if (name == null || "".equals(name)) {
+                    lbResult.setText("请输入Name！");
+                    return;
+                }
+                if (model == null || "".equals(model)) {
+                    lbResult.setText("请输入Model！");
+                    return;
+                }
+                if (count == null || "".equals(count)) {
+                    lbResult.setText("请输入Count！");
+                    return;
+                }
                 HttpsUtil httpsUtil = new HttpsUtil();
                 httpsUtil.initHttpClint();
                 Map<String, String> header = new HashMap<String, String>();
@@ -109,7 +154,8 @@ public class DevicePrint implements ActionListener {
                                 printDevice.get("mac").toString(),
                                 printDevice.get("sn").toString(),
                                 model.replace("_", "-"),
-                                name);
+                                name,
+                                temp);
                         printService.print(path);
                     }
                 } else {
@@ -123,12 +169,21 @@ public class DevicePrint implements ActionListener {
                 lbResult.setText(e1.getMessage());
             }
         } else if (e.getSource() == btnPrinterProofread) {
-
+            if (temp == 0) {
+                lbResult.setText("请选择Template！");
+                return;
+            }
             printService = new PrintServiceImpl();
-            for (int i = 0; i < 5; i++) {
-                String path = printService.createQrCodeByMac("xxxx", "FFFFxxxxxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxx", "xxxxxxxxxxxxxxxxx");
+            for (int i = 0; i < 3; i++) {
+                String path = printService.createQrCodeByMac("xxxx", "FFFFxxxxxxxxxxxx", "xxxxxxxxxx", "xxxxxxxxx", "xxxxxxxxxxxxxxxxx", temp);
                 printService.print(path);
             }
+        } else if (e.getSource() == jrb1) {
+            temp = 1;
+        } else if (e.getSource() == jrb2) {
+            temp = 2;
+        } else if (e.getSource() == jrb3) {
+            temp = 3;
         }
     }
 }
